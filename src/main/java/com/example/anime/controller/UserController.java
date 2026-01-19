@@ -2,7 +2,6 @@ package com.example.anime.controller;
 
 import com.example.anime.dto.LoginRequest;
 import com.example.anime.dto.SignupRequest;
-import com.example.anime.security.AuthService;
 import com.example.anime.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private final AuthService authService;
 
-    public UserController(UserService userService, AuthService authService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.authService = authService;
     }
 
     @PostMapping("/signup")
@@ -50,7 +47,7 @@ public class UserController {
         }
 
         try {
-            String token = authService.login(request);
+            String token = userService.login(request);
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid username or password");

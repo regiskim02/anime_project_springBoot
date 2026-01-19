@@ -16,9 +16,10 @@ public class JwtUtil {
         this.props = props;
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Integer uid, String username) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("uid", uid)
                 .setIssuedAt(new Date())
                 .setExpiration(
                         new Date(System.currentTimeMillis() + props.getExpiration())
