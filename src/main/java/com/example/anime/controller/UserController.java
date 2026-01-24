@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class UserController {
@@ -48,7 +50,7 @@ public class UserController {
 
         try {
             String token = userService.login(request);
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(Map.of("token", token));
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid username or password");
         }

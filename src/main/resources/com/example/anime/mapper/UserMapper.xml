@@ -3,7 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.anime.mapper.UserMapper">
-    <insert id="signup">
+    <resultMap id="AnimeStatusMap" type="com.example.anime.domain.AnimeStatus">
+        <id column="anime_uid" property="animeUid"/>
+        <result column="mal_id" property="malId"/>
+        <result column="favyn" property="favyn"/>
+        <result column="watchyn" property="watchyn"/>
+        <result column="completedyn" property="completedyn"/>
+        <result column="plan_to_watchyn" property="planToWatch"/>
+        <result column="user_uid" property="userUid"/>
+    </resultMap>
+
+    <insert id="signup" parameterType="com.example.anime.dto.SignupRequest">
         INSERT INTO user(username,password)
         VALUES(#{username},#{password});
     </insert>
@@ -11,5 +21,62 @@
     <select id="findByUsername" parameterType="String" resultType="com.example.anime.domain.User">
         SELECT * FROM user
         WHERE username = #{username};
+    </select>
+    <select id="findByUserAndMalId" resultType="com.example.anime.domain.AnimeStatus">
+        SELECT *
+        FROM mal_uid
+        WHERE user_uid = #{userUid}
+        AND mal_id = #{malId}
+    </select>
+
+    <insert id="insertAnimeStatus">
+        INSERT INTO mal_uid (
+        mal_id, favyn, watchyn, completedyn, plan_to_watchyn, user_uid
+        ) VALUES (
+        #{malId}, 'N', 'N', 'N', 'N', #{userUid}
+        )
+    </insert>
+
+    <update id="updateFavorites">
+        UPDATE mal_uid
+        SET favyn = #{value}
+        WHERE user_uid = #{userUid}
+        AND mal_id = #{malId}
+    </update>
+
+    <update id="updateWatch">
+        UPDATE mal_uid
+        SET watchyn = #{value}
+        WHERE user_uid = #{userUid}
+        AND mal_id = #{malId}
+    </update>
+
+    <update id="updateCompleted">
+        UPDATE mal_uid
+        SET completedyn = #{value}
+        WHERE user_uid = #{userUid}
+        AND mal_id = #{malId}
+    </update>
+
+    <update id="updatePlanToWatch">
+        UPDATE mal_uid
+        SET plan_to_watchyn = #{value}
+        WHERE user_uid = #{userUid}
+        AND mal_id = #{malId}
+    </update>
+
+    <select id="findByUserUid"
+            parameterType="int"
+            resultMap="AnimeStatusMap">
+        SELECT
+        anime_uid,
+        mal_id,
+        favyn,
+        watchyn,
+        completedyn,
+        plan_to_watchyn,
+        user_uid
+        FROM mal_uid
+        WHERE user_uid = #{userUid}
     </select>
 </mapper>
