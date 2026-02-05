@@ -14,7 +14,22 @@ public class JwtUtil {
 
     public JwtUtil(JwtProperties props) {
         this.props = props;
-        this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
+
+        String secret = props.getSecret();
+
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException(
+                    "JWT_SECRET is missing. Define it as environment variable."
+            );
+        }
+
+        if (secret.getBytes().length < 32) {
+            throw new IllegalStateException(
+                    "JWT_SECRET is too short. It must be at least 32 bytes (256 bits)."
+            );
+        }
+
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(Integer uid, String username) {
