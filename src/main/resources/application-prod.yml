@@ -4,9 +4,9 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mariadb://localhost:3306/anime_tracker
+    username: root
+    password: 0000
 
   jpa:
     hibernate:
@@ -14,5 +14,11 @@ spring:
     show-sql: false
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: 8DK8ClivkVvDjB2IfrrL/Oott651ZbBOwzIRn2qWPB4=
   expiration: 3600000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
